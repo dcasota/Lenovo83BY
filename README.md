@@ -6,8 +6,8 @@
 2. Attach peripherical devices 
 
    usb network adapter
-   usb device 1
-   usb device datastore
+   usb device with installed ESXi
+   usb device with existing vmfs datastore
    
 3. VMware Workstation
 
@@ -25,7 +25,7 @@ Start TSM-SSH in ESXi web client. Start Putty and login to the ESXi host.
 
 6. Initial datastore configuration
 
-
+The existing vmfs datastore
 
 ```
 [root@localhost:~] esxcli hardware usb passthrough device list
@@ -38,7 +38,9 @@ Bus  Dev  VendorId  ProductId  Enabled  Can Connect to VM          Name
 2    4    90c       2000         false  no (passthrough disabled)  Silicon Motion, Inc. - Taiwan (formerly
                                                                    Feiya Technology Corp.)
 [root@localhost:~] esxcli hardware usb passthrough device disable -d 2:6:781:55ab
-[root@localhost:~] esxcli hardware usb passthrough device disable -d 2:6:781:55ab
+```
+
+```
 [root@localhost:~] vdq -q
 [
    {
@@ -90,9 +92,12 @@ Bus  Dev  VendorId  ProductId  Enabled  Can Connect to VM          Name
 [root@localhost:~] 
 ```
 
+Put ESXi in maintenancemode.
+
+Run the following commands.
+
 ```
-esxcli software vib install -d /vmfs/volume
-s/sandisk/nvd-gpu-mgmt-daemon_525.147.01-0.0.0000_22624911.zip
+esxcli software vib install -d /vmfs/volumes/sandisk/nvd-gpu-mgmt-daemon_525.147.01-0.0.0000_22624911.zip
 Installation Result
    Message: The update completed successfully, but the system needs to be rebooted for the changes to be effective.
    VIBs Installed: NVD_bootbank_nvdgpumgmtdaemon_525.147.01-1OEM.700.1.0.15843807
@@ -101,4 +106,8 @@ Installation Result
    Reboot Required: true
    DPU Results:
 [root@localhost:/vmfs/volumes/60ace419-78bc052c-deca-dca632c8a3b6]
+```
+
+```
+ esxcli software vib install -d /vmfs/volumes/sandisk/NVD-VGPU-800_525.147.01-1OEM.800.1.0.20613240_22626827.zip
 ```
