@@ -2,21 +2,24 @@
 
 1. Download bits
 
+ESXi
+NVidia ESXi 8.x Bits from https://nvid.nvidia.com/dashboard/#/dashboard, see https://ui.licensing.nvidia.com/software > Software Downloads. Download e.g. NVIDIA-GRID-vSphere-8.0-525.147.01-525.147.05-529.19.zip
 
-2. Attach peripherical devices 
+
+3. Attach peripherical devices 
 
    usb network adapter
    usb device with installed ESXi
    usb device with existing vmfs datastore
    
-3. VMware Workstation
+4. VMware Workstation
 
 In VMware Workstation, configure temporarily an ESXi VM to install ESXi on a phyiscally attached usb drive.
 
 4. Initial boot from usb drive
 
 Press Shift-O and add the following parameters on cmdline:
-cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE   
+`cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE` 
 
 In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
 With a dhcp server in the lan, it should get now an ip address.
@@ -25,7 +28,7 @@ Start TSM-SSH in ESXi web client. Start Putty and login to the ESXi host.
 
 6. Initial datastore configuration
 
-The existing vmfs datastore
+Mount the existing vmfs datastore by disabling the device from passthrough device list.
 
 ```
 [root@localhost:~] esxcli hardware usb passthrough device list
@@ -94,7 +97,11 @@ Bus  Dev  VendorId  ProductId  Enabled  Can Connect to VM          Name
 
 Put ESXi in maintenancemode.
 
-Run the following commands.
+Unzip the NVIDIA-GRID-vSphere-8.0-525.147.01-525.147.05-529.19.zip.
+Upload the host drivers NVD-VGPU-800_525.147.01-1OEM.800.1.0.20613240_22626827.zip and nvd-gpu-mgmt-daemon_525.147.01-0.0.0000_22624911.zip to the datastore.
+
+
+Run the following command.
 
 ```
 esxcli software vib install -d /vmfs/volumes/sandisk/nvd-gpu-mgmt-daemon_525.147.01-0.0.0000_22624911.zip
@@ -108,6 +115,17 @@ Installation Result
 [root@localhost:/vmfs/volumes/60ace419-78bc052c-deca-dca632c8a3b6]
 ```
 
+Run the following command.
+
 ```
  esxcli software vib install -d /vmfs/volumes/sandisk/NVD-VGPU-800_525.147.01-1OEM.800.1.0.20613240_22626827.zip
 ```
+
+4. Next boot from usb drive
+
+Press Shift-O and add the following parameters on cmdline:
+`cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE`
+
+In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
+With a dhcp server in the lan, it should get now an ip address.
+
