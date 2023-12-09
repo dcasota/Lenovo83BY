@@ -150,4 +150,4 @@
 
    https://github.com/lamw/vsphere-with-tanzu-nsxt-automated-lab-deployment
 
-144AN-LC10M-J82N5-0C0KP-8ME1H
+
