@@ -1,35 +1,35 @@
-# Lenovo83BY
+# Lenovo83BY - Initial ESXi setup
 
 1. Download bits
 
-ESXi
-NVidia ESXi 8.x Bits from https://nvid.nvidia.com/dashboard/#/dashboard, see https://ui.licensing.nvidia.com/software > Software Downloads. Download e.g. NVIDIA-GRID-vSphere-8.0-525.147.01-525.147.05-529.19.zip
+   - ESXi
+   - NVidia ESXi 8.x Bits from https://nvid.nvidia.com/dashboard/#/dashboard, see https://ui.licensing.nvidia.com/software > Software Downloads. Download e.g. NVIDIA-GRID-vSphere-8.0-525.147.01-525.147.05-529.19.zip
 
 
-3. Attach peripherical devices 
+2. Attach peripherical devices 
 
-   usb network adapter
-   usb device with installed ESXi
-   usb device with existing vmfs datastore
+   - usb type-c network adapter
+   - usb type-a device with installed ESXi
+   - usb type-a device with existing vmfs datastore
    
-4. VMware Workstation
+3. VMware Workstation
 
-In VMware Workstation, configure temporarily an ESXi VM to install ESXi on a phyiscally attached usb drive.
+   In VMware Workstation, configure temporarily an ESXi VM and install ESXi on a physically attached usb drive.
 
 4. Initial boot from usb drive
 
-Press Shift-O and add the following parameters on cmdline:
-`cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE` 
+   Press Shift-O and add the following parameters on cmdline:  
+   `cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE` 
+   
+   In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
+   With a dhcp server in the lan, it should get now an ip address.
+   
+   Start TSM-SSH in ESXi web client. Start Putty and login to the ESXi host.
 
-In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
-With a dhcp server in the lan, it should get now an ip address.
+5. Initial datastore configuration
 
-Start TSM-SSH in ESXi web client. Start Putty and login to the ESXi host.
-
-6. Initial datastore configuration
-
-Mount the existing vmfs datastore by disabling the device from passthrough device list.
-
+   Mount the existing vmfs datastore by disabling the device from passthrough device list.
+   
 ```
 [root@localhost:~] esxcli hardware usb passthrough device list
 Bus  Dev  VendorId  ProductId  Enabled  Can Connect to VM          Name
@@ -95,13 +95,13 @@ Bus  Dev  VendorId  ProductId  Enabled  Can Connect to VM          Name
 [root@localhost:~] 
 ```
 
-Put ESXi in maintenancemode.
-
-Unzip the NVIDIA-GRID-vSphere-8.0-525.147.01-525.147.05-529.19.zip.
-Upload the host drivers NVD-VGPU-800_525.147.01-1OEM.800.1.0.20613240_22626827.zip and nvd-gpu-mgmt-daemon_525.147.01-0.0.0000_22624911.zip to the datastore.
-
-
-Run the following command.
+   Put ESXi in maintenancemode.
+   
+   Unzip the NVIDIA-GRID-vSphere-8.0-525.147.01-525.147.05-529.19.zip.  
+   Upload the host drivers NVD-VGPU-800_525.147.01-1OEM.800.1.0.20613240_22626827.zip and nvd-gpu-mgmt-daemon_525.147.01-0.0.0000_22624911.zip to the datastore.
+   
+   
+   Run the following command.
 
 ```
 esxcli software vib install -d /vmfs/volumes/sandisk/nvd-gpu-mgmt-daemon_525.147.01-0.0.0000_22624911.zip
@@ -114,7 +114,7 @@ Installation Result
    DPU Results:
 ```
 
-Run the following command.
+   Run the following command.
 
 ```
  esxcli software vib install -d /vmfs/volumes/sandisk/NVD-VGPU-800_525.147.01-1OEM.800.1.0.20613240_22626827.zip
@@ -127,11 +127,11 @@ Installation Result
    DPU Results:
 ```
 
-4. Next boot from usb drive
+6. Next boot from usb drive
 
-Press Shift-O and add the following parameters on cmdline:
-`cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE`
-
-In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
-With a dhcp server in the lan, it should get now an ip address.
+   Press Shift-O and add the following parameters on cmdline:  
+   `cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE`
+   
+   In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
+   With a dhcp server in the lan, it should get now an ip address.
 
