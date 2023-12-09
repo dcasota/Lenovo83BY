@@ -137,4 +137,17 @@
    In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
    Unfortunately, run `esxcli system module parameters set -p "usbnBusFullScanOBootEnabled=1" -m vmkusb` does make vusb0 permanent, and for secure boot I haven't found a solution yet.
    
+7. Install VCSA
 
+
+8. Install PowerCLI
+   ```
+   install-module -name VMware.PowerCLI
+   set-PowerCLIConfiguration -InvalidCertificateAction:Ignore
+   ```
+
+9. Download and configure Automated Lab Deployment
+
+   https://github.com/lamw/vsphere-with-tanzu-nsxt-automated-lab-deployment
+
+144AN-LC10M-J82N5-0C0KP-8ME1H
