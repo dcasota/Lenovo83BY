@@ -129,25 +129,12 @@
       DPU Results:
    ```
 
-6. Next boot from usb drive
-
-   Press Shift-O and add the following parameters on cmdline
-   `cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE`
-
-   or run the following code snippet once.
+   Run the following code snippet to make the initial usb boot settings permanent.
    `sed -i 's/autoPartition.*/autoPartition=FALSE cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE/g' /vmfs/volumes/BOOTBANK1/boot.cfg`
 
-   In theory, you could also run the following snippet.
-   ```
-   esxcli system settings kernel set -s ignoreMsrFaults -v TRUE
-   esxcli system settings kernel set -s tscSyncSkip -v TRUE
-   esxcli system settings kernel set -s timerforceTSC -v TRUE
-   esxcli system settings kernel set -s cpuUniformityHardCheckPanic -v FALSE   
-   ```
-   
-   In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
+6. Next boot from usb drive
 
-   Run `esxcli system module parameters set -p "usbBusFullScanOnBootEnabled=1" -m vmkusb`
-   With a dhcp server in the lan, it should get now an ip address.
+   In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
+   Unfortunately, run `esxcli system module parameters set -p "usbnBusFullScanOBootEnabled=1" -m vmkusb` does make vusb0 permanent, and for secure boot I haven't found a solution yet.
    
 
