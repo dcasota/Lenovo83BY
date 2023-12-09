@@ -135,6 +135,9 @@
    `cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE`
 
    or run the following code snippet once.
+   `sed -i 's/autoPartition.*/autoPartition=FALSE cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE/g' /vmfs/volumes/BOOTBANK1/boot.cfg`
+
+   In theory, you could also run the following snippet.
    ```
    esxcli system settings kernel set -s ignoreMsrFaults -v TRUE
    esxcli system settings kernel set -s tscSyncSkip -v TRUE
