@@ -15,13 +15,16 @@ In VMware Workstation, configure temporarily an ESXi VM to install ESXi on a phy
 
 4. Initial boot from usb drive
 
+Press Shift-O and add the following parameters on cmdline:
 cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE   
 
 In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
-
 With a dhcp server in the lan, it should get now an ip address.
 
+Start TSM-SSH in ESXi web client. Start Putty and login to the ESXi host.
+
 6. Initial datastore configuration
+
 
 
 ```
