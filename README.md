@@ -112,13 +112,19 @@ Installation Result
    VIBs Skipped:
    Reboot Required: true
    DPU Results:
-[root@localhost:/vmfs/volumes/60ace419-78bc052c-deca-dca632c8a3b6]
 ```
 
 Run the following command.
 
 ```
  esxcli software vib install -d /vmfs/volumes/sandisk/NVD-VGPU-800_525.147.01-1OEM.800.1.0.20613240_22626827.zip
+Installation Result
+   Message: The update completed successfully, but the system needs to be rebooted for the changes to be effective.
+   VIBs Installed:
+   VIBs Removed:
+   VIBs Skipped: NVD_bootbank_NVD-VMware_ESXi_8.0.0_Driver_525.147.01-1OEM.800.1.0.20613240
+   Reboot Required: true
+   DPU Results:
 ```
 
 4. Next boot from usb drive
