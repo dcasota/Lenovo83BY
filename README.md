@@ -146,5 +146,8 @@
    ```
    
    In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
+
+   Run `esxcli system module parameters set -p "usbBusFullScanOnBootEnabled=1" -m vmkusb`
    With a dhcp server in the lan, it should get now an ip address.
+   
 
