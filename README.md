@@ -17,6 +17,10 @@ In VMware Workstation, configure temporarily an ESXi VM to install ESXi on a phy
 
 cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE   
 
+In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
+
+With a dhcp server in the lan, it should get now an ip address.
+
 6. Initial datastore configuration
 
 
