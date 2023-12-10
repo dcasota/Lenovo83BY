@@ -200,6 +200,6 @@
 
 11. Download and configure Automated Lab Deployment
 
-   https://github.com/lamw/vsphere-with-tanzu-nsxt-automated-lab-deployment
+    https://github.com/lamw/vsphere-with-tanzu-nsxt-automated-lab-deployment
 
 
