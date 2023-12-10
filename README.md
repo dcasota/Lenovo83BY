@@ -3,7 +3,7 @@
 1. Download bits
 
    - ESXi
-   - NVidia ESXi 8.x Bits from https://nvid.nvidia.com/dashboard/#/dashboard, see https://ui.licensing.nvidia.com/software > Software Downloads. Download e.g. NVIDIA-GRID-vSphere-8.0-525.147.01-525.147.05-529.19.zip
+   - NVidia ESXi 8.x Bits from https://nvid.nvidia.com/dashboard/#/dashboard, see https://ui.licensing.nvidia.com/software > Software Downloads. Download e.g. `NVIDIA-GRID-vSphere-8.0-525.147.01-525.147.05-529.19.zip`
 
 
 2. Attach peripherical devices 
@@ -99,8 +99,8 @@
 
    Put ESXi in maintenancemode.
    
-   Unzip the NVIDIA-GRID-vSphere-8.0-525.147.01-525.147.05-529.19.zip.  
-   Upload the host drivers NVD-VGPU-800_525.147.01-1OEM.800.1.0.20613240_22626827.zip and nvd-gpu-mgmt-daemon_525.147.01-0.0.0000_22624911.zip to the datastore.
+   Unzip the `NVIDIA-GRID-vSphere-8.0-525.147.01-525.147.05-529.19.zip`.  
+   Upload the host drivers `NVD-VGPU-800_525.147.01-1OEM.800.1.0.20613240_22626827.zip` and `nvd-gpu-mgmt-daemon_525.147.01-0.0.0000_22624911.zip` to the datastore.
    
    
    Run the following command.
@@ -129,24 +129,76 @@
       DPU Results:
    ```
 
-   Run the following code snippet to make the initial usb boot settings permanent.
+   Run the following code snippet to make the initial usb boot settings permanent.  
    `sed -i 's/autoPartition.*/autoPartition=FALSE cpuUniformityHardCheckPanic=FALSE ignoreMsrFaults=TRUE tscSyncSkip=TRUE timerforceTSC=TRUE/g' /vmfs/volumes/BOOTBANK1/boot.cfg`
 
 6. Next boot from usb drive
 
    In DCUI, system customization, configure management network, network adapters, make sure vusb0 is selected.
-   Unfortunately, run `esxcli system module parameters set -p "usbnBusFullScanOBootEnabled=1" -m vmkusb` does make vusb0 permanent, and for secure boot I haven't found a solution yet.
+   Unfortunately, run `esxcli system module parameters set -p "usbnBusFullScanOBootEnabled=1" -m vmkusb` does make an equivalent setting to the DCUI' vusb0 selection which works in a secure environment.
+
+7. Check the usb vmfs
    
-7. Install VCSA
+   Placing a vmfs on an usb datastore isn't officially supported. Hence, we must take care of the vmfs and check regularly if there are issues. Use the vSphere on-Disk Metadata Analyzer (voma) cmdline tool.
 
-
-8. Install PowerCLI
+   First, identify  the usb drive e.g. with `ls /vmfs/devices/disks/`.
+   
+   Then, run the voma check.
    ```
-   install-module -name VMware.PowerCLI
-   set-PowerCLIConfiguration -InvalidCertificateAction:Ignore
+   voma -m vmfs -f check -d /vmfs/devices/disks/vml.0100000000303130313037353531356539356465376434383038633237636463303235363637636562613453616exxxxx:1
    ```
 
-9. Download and configure Automated Lab Deployment
+   If issues are listed, run voma with advfix function.
+   ```
+   
+   [root@localhost:~] voma -m vmfs -f advfix -d /vmfs/devices/disks/vml.0100000000303130313037
+   353531356539356465376434383038633237636463303235363637636562613453616e4xxxxx:1 -p /tmp
+   
+   ########################################################################
+   #   Warning !!!                                                        #
+   #                                                                      #
+   #   You are about to execute VOMA in Advanced Fix mode. This mode can  #
+   #   potentially end up in deleting some files/vmdks from datastore     #
+   #   if it is heavily corrupted.                                        #
+   #                                                                      #
+   #   This mode is suppored only under VMware Support supervision.       #
+   ########################################################################
+   
+   VMware ESXi Question:
+   Do you want to continue (Y/N)?
+   
+   0) _Yes
+   1) _No
+   
+   Select a number from 0-1: 0
+   
+      Successfully created patch file /tmp/mpx.vmhba32:C0:T0:L0:1_Sun_Dec_10_11:59:54_2023
+   Running VMFS Checker version 2.1 in advfix mode
+   Initializing LVM metadata, Basic Checks will be done
+   
+   Checking for filesystem activity
+   Performing filesystem liveness check../Scanning for VMFS-6 host activity (4096 bytes/HB, 10         Scsi 2 reservation successful
+   [...]
+   ```
+   
+   The output of all five phase can be quite long. At the end you see a listing e.g.
+   ```
+   Total Errors Found:           4
+   Total Errors Fixed:           4
+   Total Partially Fixed errors: 0
+   ```
+   
+9. Install VCSA
+
+   Extract the vcsa e.g. `VMware-VCSA-all-8.0.2-22385739.iso` and import the `.\vcsa\VMware-vCenter-Server-Appliance-8.0.2.00000-22385739_OVF10.ova`.
+
+10. Install PowerCLI
+    ```
+    install-module -name VMware.PowerCLI
+    set-PowerCLIConfiguration -InvalidCertificateAction:Ignore
+    ```
+
+11. Download and configure Automated Lab Deployment
 
    https://github.com/lamw/vsphere-with-tanzu-nsxt-automated-lab-deployment
 
