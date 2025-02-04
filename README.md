@@ -1,3 +1,8 @@
+Smorgasbord of tests for using the bare metal laptop, a Lenovo Yog Pro i9 83BY, for
+- Microsoft Windows 11, see e.g. https://github.com/dcasota/Lenovo83BY/wiki/Windows-11-UEFI-Secure-Boot:-Updating-Microsoft-Secure-Boot-Keys
+- VMware By Broadcom ESXi, see below
+- VMware By Broadcom Photon OS
+
 # Lenovo83BY - Initial ESXi setup
 
 1. Download bits
